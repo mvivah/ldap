@@ -28,6 +28,8 @@ Route::apiResource('customers',CustomerController::class);
 Route::apiResource('invoices',InvoiceController::class);
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
+Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
