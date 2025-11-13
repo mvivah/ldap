@@ -1,5 +1,4 @@
 <?php
-
 return [
 
     /*
@@ -59,18 +58,24 @@ return [
     |
     */
 
-    'providers' => [
-        'users' => [
-            // 'driver' => 'eloquent',
-            'driver' => 'ldap',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+'providers' => [
+    'users' => [
+        'driver' => 'ldap',
+        'model' =>  App\Ldap\User::class,
+        'scopes' => [],
+        'database' => [
+            'model' =>  App\Models\User::class,
+            'sync_passwords' => true,
+            'sync_attributes' => [
+                'name' => 'cn',
+                'email' => 'mail',
+                'username' => 'sAMAccountName',
+                'first_name' => 'givenName',
+                'last_name' => 'sn',
+            ],
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
+],
 
     /*
     |--------------------------------------------------------------------------
