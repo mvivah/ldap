@@ -16,6 +16,24 @@ Route::get('/user', function (Request $request) {
 Route::get('/status', function () {
     return response()->json(['status' => 'API is running']);
 });
+Route::get('/debug-otp/{email}', function ($email) {
+    if (!config('app.debug')) {
+        abort(403);
+    }
+    $otps = \App\Models\Otp::where('email', $email)->orderBy('created_at', 'desc')->get();
+    $result = [];
+    foreach ($otps as $otp) {
+        $result[] = [
+            'otp' => $otp->otp,
+            'created_at' => $otp->created_at->toDateTimeString(),
+            'expires_at' => $otp->expires_at->toDateTimeString(),
+            'verified_at' => $otp->verified_at?->toDateTimeString(),
+            'now' => now()->toDateTimeString(),
+            'is_valid' => $otp->isValid(),
+        ];
+    }
+    return response()->json($result);
+});
 Route::get('/hello', function () {
     return ['message' => 'Hello, API World!'];
 });

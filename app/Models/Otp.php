@@ -40,7 +40,7 @@ class Otp extends Model
         return self::create([
             'email' => $email,
             'otp' => self::generateOtpCode(),
-            'expires_at' => Carbon::now()->addMinutes($expiryMinutes),
+            'expires_at' => now()->addMinutes($expiryMinutes),
         ]);
     }
 
@@ -58,7 +58,7 @@ class Otp extends Model
      */
     public function markAsVerified(): void
     {
-        $this->update(['verified_at' => Carbon::now()]);
+        $this->update(['verified_at' => now()]);
     }
 
     /**
@@ -77,7 +77,7 @@ class Otp extends Model
         return self::where('email', $email)
             ->where('otp', $otp)
             ->whereNull('verified_at')
-            ->where('expires_at', '>', Carbon::now())
+            ->where('expires_at', '>', now())
             ->first();
     }
 }

@@ -68,8 +68,26 @@ class AuthController extends Controller
             $otp = Otp::getValidOtp($data['email'], $data['otp']);
 
             if (!$otp) {
+                // Debug: Check what OTPs exist for this email
+                $allOtps = Otp::where('email', $data['email'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                
+                $debug = [];
+                foreach ($allOtps as $o) {
+                    $debug[] = [
+                        'otp' => $o->otp,
+                        'matches' => $o->otp === $data['otp'],
+                        'verified_at' => $o->verified_at,
+                        'expires_at' => $o->expires_at->toDateTimeString(),
+                        'now' => now()->toDateTimeString(),
+                        'is_future' => $o->expires_at->isFuture(),
+                    ];
+                }
+
                 return response()->json([
-                    'message' => 'Invalid or expired OTP code.'
+                    'message' => 'Invalid or expired OTP code.',
+                    'debug' => config('app.debug') ? $debug : null,
                 ], 400);
             }
 
