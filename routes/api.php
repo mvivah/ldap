@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Otp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
@@ -20,7 +21,7 @@ Route::get('/debug-otp/{email}', function ($email) {
     if (!config('app.debug')) {
         abort(403);
     }
-    $otps = \App\Models\Otp::where('email', $email)->orderBy('created_at', 'desc')->get();
+    $otps = Otp::where('email', $email)->orderBy('created_at', 'desc')->get();
     $result = [];
     foreach ($otps as $otp) {
         $result[] = [
